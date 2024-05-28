@@ -1,20 +1,31 @@
 package org.freedu.quranapp
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import org.freedu.quranapp.repository.QuranRepository
+import org.freedu.quranapp.retrofit.RetrofitInstance
+import org.freedu.quranapp.viewmodel.QuranViewModel
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var viewModel: QuranViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+
+        val repository = QuranRepository(RetrofitInstance.api)
+        viewModel = ViewModelProvider(this).get(QuranViewModel::class.java)
+
+        viewModel.verses.observe(this, Observer {
+
+        })
+
+        viewModel.translations.observe(this, Observer {
+
+        })
+
+        viewModel.getVerses()
+        viewModel.getTranslations("en")
     }
 }
